@@ -3,13 +3,9 @@ import './App.css';
 import styled from 'styled-components';
 
 const CustomElement = styled.div`
-  color: green;
   font-size: 30px;
   `;
 
-const BlueElement = CustomElement.extend`
-  color: blue;
-`;
 
 
 class App extends Component {
@@ -19,7 +15,6 @@ class App extends Component {
       <CustomElement>
        Hello
       </CustomElement>
-      <BlueElement>Blue element</BlueElement>
       </div>
     );
   }
