@@ -1,32 +1,22 @@
 import React, { Component } from 'react';
 import './App.css';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
+import AppBar from './AppBar';
 
-const Logo = styled.div`
-  font-size: 1.5em;
-  `;
-
-const ControlButton = styled.div`
-  cursor: pointer;
-  ${props => props.active && css`
-    text-shadow: 0px 0px 60px #03ff03;
-  `}
-`;
-
-
+/**
+ *  Styled Components
+ */
 const AppLayout = styled.div`
   padding: 40px;
-`;
-
-const Bar = styled.div`
-  display: grid;
-  grid-template-columns: 100px  auto 100px 100px;
-  margin-bottom: 40px;
 `;
 
 const Content = styled.div`
 `;
 
+
+/**
+ *  Methods
+ */
 const checkFirstVisit = () => {
   let cryptoDashData = localStorage.getItem('cryptoDash');
   if(!cryptoDashData){
@@ -38,14 +28,27 @@ const checkFirstVisit = () => {
   return {};
 }
 
+/**
+ *  App
+ */
 class App extends Component {
+  // Update state
   state = {
     page: 'dashboard',
     ...checkFirstVisit()
   };
 
+  componentDidMount = () => {
+    // Fetch coins
+    this.fetchCoins();
+  }
+
+  fetchCoins = () => {
+    console.log('Fetching coins');
+  }
 
 
+  // Display logic
   displayingDashboard = () => this.state.page === 'dashboard';
   displayingSettings = () => this.state.page === 'settings';
   firstVisitMessage = () => {
@@ -53,6 +56,8 @@ class App extends Component {
       return <div>Welcome to CryptoDash. Select favorite coins to begin</div>
     }
   };
+
+  // Navigation requirement
   confirmFavorites = () => {
     localStorage.setItem('cryptoDash', 'test');
     this.setState({firstVisit: false, page: 'dashboard'});
@@ -60,6 +65,7 @@ class App extends Component {
   };
 
 
+  // Settings to display
   settingsContent = () => {
     return ( 
     <div>
@@ -70,36 +76,24 @@ class App extends Component {
     </div>)
   };
 
+  loadingContent = () => {
+    if(!this.state.coinList){
+      return <div>Loading Coins</div>
+    }
+  }
+
   render() {
     return (
       <AppLayout>
       
       {/* Navbar */}
-      <Bar>
-        <Logo>CryptoDash</Logo>
-        <div></div>
-
-        {/* Dashboard  Control*/}
-        {/* Show dashboard only if favorites have been set */}
-        { !this.state.firstVisit && (
-        <ControlButton 
-          onClick={() => this.setState({page: 'dashboard'})} 
-          active={this.displayingDashboard()}>Dashboard
-        </ControlButton>
-        )}
-
-        {/* Settings Control*/}
-        <ControlButton 
-          onClick={() => this.setState({page: 'settings'})} 
-          active={this.displayingSettings()}>Settings
-        </ControlButton>
-      </Bar>
-
-      {/* All Content */}
-      <Content>
-        {this.displayingSettings() && this.settingsContent()}
-        
-      </Content>
+      {AppBar.call(this)}
+      {this.loadingContent() || ( 
+        <Content>
+          {this.displayingSettings() && this.settingsContent()}
+          
+        </Content>
+      )}
       </AppLayout>
     );
   }
