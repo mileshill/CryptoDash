@@ -27,15 +27,33 @@ const Bar = styled.div`
 const Content = styled.div`
 `;
 
-
+const checkFirstVisit = () => {
+  let cryptoDashData = localStorage.getItem('cryptoDash');
+  if(!cryptoDashData){
+    return {
+      firstVisit: true,
+      page: 'settings'
+    }
+  }
+  return {};
+}
 
 class App extends Component {
   state = {
-    page: 'dashboard' 
+    page: 'dashboard',
+    ...checkFirstVisit()
   };
+
+
 
   displayingDashboard = () => this.state.page === 'dashboard';
   displayingSettings = () => this.state.page === 'settings';
+  firstVisitMessage = () => {
+    if(this.state.firstVisit){
+      return <div>Welcome to CryptoDash. Select favorite coins to begin</div>
+    }
+  };
+
   render() {
     return (
       <AppLayout>
@@ -51,7 +69,9 @@ class App extends Component {
           active={this.displayingSettings()}>Settings
         </ControlButton>
       </Bar>
-      <Content>Hello {this.state.page}</Content>
+      <Content>
+        {this.firstVisitMessage()}
+      </Content>
       </AppLayout>
     );
   }
