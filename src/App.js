@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './App.css';
 import styled from 'styled-components';
 import AppBar from './AppBar';
+import CoinList from './CoinList';
 const cc = require('cryptocompare');
 
 /**
@@ -45,8 +46,8 @@ class App extends Component {
   }
 
   fetchCoins = async () => {
-    let coinsList = (await cc.coinList()).Data;
-    this.setState({ coinsList });
+    let coinList = (await cc.coinList()).Data;
+    this.setState({ coinList });
   }
 
 
@@ -75,11 +76,14 @@ class App extends Component {
       <div onClick={this.confirmFavorites}>
         Confirm Favorites
       </div>
+      <div>
+        {CoinList.call(this)}
+      </div>
     </div>)
   };
 
   loadingContent = () => {
-    if(!this.state.coinsList){
+    if(!this.state.coinList){
       return <div>Loading Coins</div>
     }
   }
