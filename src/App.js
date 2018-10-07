@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './App.css';
 import styled from 'styled-components';
 import AppBar from './AppBar';
+const cc = require('cryptocompare');
 
 /**
  *  Styled Components
@@ -43,8 +44,9 @@ class App extends Component {
     this.fetchCoins();
   }
 
-  fetchCoins = () => {
-    console.log('Fetching coins');
+  fetchCoins = async () => {
+    let coinsList = (await cc.coinList()).Data;
+    this.setState({ coinsList });
   }
 
 
@@ -77,7 +79,7 @@ class App extends Component {
   };
 
   loadingContent = () => {
-    if(!this.state.coinList){
+    if(!this.state.coinsList){
       return <div>Loading Coins</div>
     }
   }
