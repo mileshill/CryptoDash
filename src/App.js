@@ -53,24 +53,52 @@ class App extends Component {
       return <div>Welcome to CryptoDash. Select favorite coins to begin</div>
     }
   };
+  confirmFavorites = () => {
+    localStorage.setItem('cryptoDash', 'test');
+    this.setState({firstVisit: false, page: 'dashboard'});
+    
+  };
+
+
+  settingsContent = () => {
+    return ( 
+    <div>
+      {this.firstVisitMessage()}
+      <div onClick={this.confirmFavorites}>
+        Confirm Favorites
+      </div>
+    </div>)
+  };
 
   render() {
     return (
       <AppLayout>
+      
+      {/* Navbar */}
       <Bar>
         <Logo>CryptoDash</Logo>
         <div></div>
+
+        {/* Dashboard  Control*/}
+        {/* Show dashboard only if favorites have been set */}
+        { !this.state.firstVisit && (
         <ControlButton 
           onClick={() => this.setState({page: 'dashboard'})} 
           active={this.displayingDashboard()}>Dashboard
         </ControlButton>
+        )}
+
+        {/* Settings Control*/}
         <ControlButton 
           onClick={() => this.setState({page: 'settings'})} 
           active={this.displayingSettings()}>Settings
         </ControlButton>
       </Bar>
+
+      {/* All Content */}
       <Content>
-        {this.firstVisitMessage()}
+        {this.displayingSettings() && this.settingsContent()}
+        
       </Content>
       </AppLayout>
     );
