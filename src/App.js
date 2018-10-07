@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 import './App.css';
-import styled from 'styled-components';
-import css from 'styled-components';
+import styled, { css } from 'styled-components';
 
 const Logo = styled.div`
   font-size: 1.5em;
   `;
 
 const ControlButton = styled.div`
-  ${props => props.active && `
+  cursor: pointer;
+  ${props => props.active && css`
     text-shadow: 0px 0px 60px #03ff03;
   `}
 `;
@@ -42,8 +42,14 @@ class App extends Component {
       <Bar>
         <Logo>CryptoDash</Logo>
         <div></div>
-        <ControlButton active={this.displayingDashboard()}>Dashboard</ControlButton>
-        <ControlButton active={this.displayingSettings()}>Settings</ControlButton>
+        <ControlButton 
+          onClick={() => this.setState({page: 'dashboard'})} 
+          active={this.displayingDashboard()}>Dashboard
+        </ControlButton>
+        <ControlButton 
+          onClick={() => this.setState({page: 'settings'})} 
+          active={this.displayingSettings()}>Settings
+        </ControlButton>
       </Bar>
       <Content>Hello {this.state.page}</Content>
       </AppLayout>
