@@ -3,6 +3,8 @@ import './App.css';
 import styled from 'styled-components';
 import AppBar from './AppBar';
 import CoinList from './CoinList';
+import Search from './Search';
+import { ConfirmButton } from './Button';
 import * as _ from 'lodash';
 const cc = require('cryptocompare');
 
@@ -22,6 +24,10 @@ const AppLayout = styled.div`
 const Content = styled.div`
 `;
 
+const CenterDiv = styled.div`
+  display: grid;
+  justify-content: center;
+`;
 
 /**
  *  Methods
@@ -70,9 +76,8 @@ class App extends Component {
 
   // Navigation requirement
   confirmFavorites = () => {
-    localStorage.setItem('cryptoDash', 'test');
     this.setState({firstVisit: false, page: 'dashboard'});
-    
+    localStorage.setItem('cryptoDash', JSON.stringify({favorites: this.state.favorites}));
   };
 
 
@@ -81,22 +86,28 @@ class App extends Component {
     return ( 
     <div>
       {this.firstVisitMessage()}
-      <div onClick={this.confirmFavorites}>
-        Confirm Favorites
-      </div>
       <div>
         {CoinList.call(this, true)}  {/* Loading favorites */}
-        {CoinList.call(this)}        {/* Loading coinlist */}      
+        <CenterDiv>
+          <ConfirmButton onClick={this.confirmFavorites}>
+            Confirm Favorites
+          </ConfirmButton>
+        </CenterDiv>
+      
+        {Search.call(this)}          {/* Fuzzy search      */}
+        {CoinList.call(this)}        {/* Loading coinlist  */}      
       </div>
     </div>)
   };
 
+  // Loading Message
   loadingContent = () => {
     if(!this.state.coinList){
       return <div>Loading Coins</div>
     }
   }
 
+  // Update state with new favorite
   addCoinToFavorites = coinKey => {
     let favorites = [...this.state.favorites];
     if(favorites.length < MAX_FAVORITES){
@@ -105,14 +116,15 @@ class App extends Component {
     }
   };
 
+  // Update state with new favorites
   removeCoinFromFavorites = coinKey => {
     let favorites = [...this.state.favorites];
     this.setState({ favorites: _.pull(favorites, coinKey) });
   }
 
+  // Input for disabling pointer-events if already in favorites
   isInFavorites = coinKey =>  _.includes([...this.state.favorites], coinKey)
   
-
 
   render() {
     return (
@@ -123,7 +135,6 @@ class App extends Component {
       {this.loadingContent() || ( 
         <Content>
           {this.displayingSettings() && this.settingsContent()}
-          
         </Content>
       )}
       </AppLayout>
