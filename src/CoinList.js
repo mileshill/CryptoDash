@@ -1,6 +1,6 @@
 import React from 'react';
-import styled from 'styled-components';
-import { subtleBoxShadow, lightBlueBackground, greenBoxShadow } from './Style';
+import styled, { css } from 'styled-components';
+import { subtleBoxShadow, lightBlueBackground, greenBoxShadow, redBoxShadow } from './Style';
 
 const CoinGrid = styled.div`
     display: grid;
@@ -17,11 +17,17 @@ const CoinTile = styled.div`
     
     &:hover{
         cursor: pointer;
-        color: white;
-        font-weight: bold;
-        transform: scale(1.1);
         ${greenBoxShadow}
     }
+    ${props => props.favorite && css`
+        &:hover{
+            ${redBoxShadow}
+        }   
+    `}
+    ${props => props.chosen && !props.favorite && css`
+       pointer-events: none;
+       opacity: 0.4; 
+    `}
     }`;
 
 const CoinHeaderGrid = styled.div`
@@ -31,18 +37,23 @@ const CoinHeaderGrid = styled.div`
 const CoinSymbol = styled.div`
     justify-self: right;`; 
 
-export default function() {
-    console.log('CoinSample', this.state.coinList['BTC']);
+
+export default function(favorites=false) {
+    let coinKeys = favorites ? this.state.favorites : Object.keys(this.state.coinList).slice(0, 50);
     return (
         <CoinGrid>
         {
-            Object.keys(this.state.coinList).slice(0, 50).map((coin, idx) => 
-                <CoinTile key={idx}>
+            coinKeys.map((coinKey, idx) => 
+                <CoinTile 
+                    key={idx} 
+                    favorite={favorites}
+                    chosen={this.isInFavorites(coinKey)} 
+                    onClick={favorites ? () => this.removeCoinFromFavorites(coinKey) : () => this.addCoinToFavorites(coinKey)}>
                 <CoinHeaderGrid>
-                    <div>{this.state.coinList[coin].CoinName}</div>
-                    <CoinSymbol>{this.state.coinList[coin].Symbol}</CoinSymbol>
+                    <div>{this.state.coinList[coinKey].CoinName}</div>
+                    <CoinSymbol>{this.state.coinList[coinKey].Symbol}</CoinSymbol>
                 </CoinHeaderGrid>
-                <img style={{height: '50px'}} src={`http://cryptocompare.com/${this.state.coinList[coin].ImageUrl}`} alt=''/>
+                <img style={{height: '50px'}} src={`http://cryptocompare.com/${this.state.coinList[coinKey].ImageUrl}`} alt=''/>
                 </CoinTile>)
         }
         </CoinGrid>
