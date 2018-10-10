@@ -6,6 +6,7 @@ import CoinList from './CoinList';
 import Search from './Search';
 import { ConfirmButton } from './Button';
 import * as _ from 'lodash';
+import fuzzy from 'fuzzy';
 const cc = require('cryptocompare');
 
 
@@ -125,6 +126,37 @@ class App extends Component {
   // Input for disabling pointer-events if already in favorites
   isInFavorites = coinKey =>  _.includes([...this.state.favorites], coinKey)
   
+  // Search functionality
+  filterCoins = (event) => {
+    let inputValue = event.target.value;
+    if(!inputValue){
+      this.setState({filteredCoins: null});
+      return;
+    }
+    this.handleFilter(inputValue);
+  };
+
+  handleFilter = _.debounce((inputValue) => {
+    // Get all symbols
+    let coinSymbols = Object.keys(this.state.coinList);
+    // Get all names
+    let coinNames = coinSymbols.map(sym => this.state.coinList[sym].CoinName);
+    // Search criteria
+    let allStringsToSearch = coinSymbols.concat(coinNames);
+    let fuzzyResults = fuzzy.filter(inputValue, allStringsToSearch, {})
+      .map(res => res.string);
+ 
+    // Pick fuzzy matched coins from the state.coinList
+    let filteredCoins = _.pickBy(this.state.coinList, (result, symKey) => {
+      let coinName = result.CoinName;
+      // If fuzzy result contains the symbol or coinName,
+      // pick that element from state.coinList
+      return _.includes(fuzzyResults, symKey) || _.includes(fuzzyResults, coinName);
+    })
+
+    // Mutate state
+    this.setState({filteredCoins});
+  }, 500)// wrapped in debounce
 
   render() {
     return (
