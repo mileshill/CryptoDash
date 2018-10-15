@@ -103,7 +103,12 @@ class App extends Component {
 
   // Navigation requirement
   confirmFavorites = () => {
-    this.setState({firstVisit: false, page: 'dashboard'});
+    this.setState({
+      firstVisit: false, 
+      page: 'dashboard',
+      prices: null
+    });
+    this.fetchPrices();
     localStorage.setItem('cryptoDash', JSON.stringify({favorites: this.state.favorites}));
   };
 
