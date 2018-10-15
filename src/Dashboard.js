@@ -29,11 +29,18 @@ const CoinTileCompact = CoinTile.extend`
 const PaddingBlue = styled.div`
     ${subtleBoxShadow}
     ${lightBlueBackground}
-    padding:10px;
+    padding: 5px; 
+`;
+
+const ChartGrid = styled.div`
+    display: grid;
+    grid-gap: 20px;
+    grid-template-columns: 1fr 3fr;
+    margin-top: 15px;
 `;
 
 export default function(){
-    return(
+    return [
     <CoinGrid>
     {   this.state.prices.map((price, idx) => {
             let sym = Object.keys(price)[0];
@@ -73,7 +80,18 @@ export default function(){
                     </div>
             </CoinTileCompact>
     })}
-    </CoinGrid>
-    )
+    </CoinGrid>,
+    // END COIN GRID; BEGIN PICTURE
+    <ChartGrid>
+        <PaddingBlue>
+            <h2 style={{textAlign: 'center'}}>{this.state.coinList[this.state.currentFavorite].CoinName}</h2>
+            <img style={{height: '200px', width: '200px', display: 'block', margin: 'auto'}} src={`http://cryptocompare.com/${this.state.coinList[this.state.currentFavorite].ImageUrl}`} alt=''/>
+
+        </PaddingBlue>
+        <PaddingBlue>
+            Chart goes here
+        </PaddingBlue>
+    </ChartGrid>
+    ]
     
 }
