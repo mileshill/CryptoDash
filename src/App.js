@@ -42,8 +42,10 @@ const checkFirstVisit = () => {
       page: 'settings'
     }
   }
+  let {favorites, currentFavorite} = cryptoDashData;
   return {
-    favorites: cryptoDashData.favorites
+    favorites,
+    currentFavorite
   };
 }
 

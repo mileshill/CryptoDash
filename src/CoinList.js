@@ -32,6 +32,12 @@ export const CoinTile = styled.div`
        pointer-events: none;
        opacity: 0.4; 
     `}
+    ${props => props.currentFavorite && css`
+       ${greenBoxShadow}
+        &:hover{
+           pointer-events: none,
+       } 
+    `}
     }`;
 
 export const CoinHeaderGrid = styled.div`

@@ -38,8 +38,14 @@ export default function(){
     {   this.state.prices.map((price, idx) => {
             let sym = Object.keys(price)[0];
             let data = price[sym]['USD'];
+            let tileProps = {
+                currentFavorite: sym === this.state.currentFavorite,
+                onClick: () => {
+                    this.setState({currentFavorite: sym})
+                }
+            };
             return idx < 5 ? (
-                <CoinTile key={idx}>
+                <CoinTile key={idx} {...tileProps}>
                    <CoinHeaderGrid>
                     <div>{sym}</div>
                     <CoinSymbol>
@@ -55,7 +61,7 @@ export default function(){
                 </div>
                 </CoinTile>
             ) :
-            <CoinTileCompact>
+            <CoinTileCompact {...tileProps}>
                 <div style={{justifySelf: 'left'}}>{sym}</div>
                     <CoinSymbol>
                         <ChangePct red={data.CHANGEPCT24HOUR < 0}>
