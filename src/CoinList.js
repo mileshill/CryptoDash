@@ -1,6 +1,6 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
-import _ from 'lodash';
+//import _ from 'lodash';
 import { subtleBoxShadow, lightBlueBackground, greenBoxShadow, redBoxShadow } from './Style';
 
 const CoinGrid = styled.div`

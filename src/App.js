@@ -34,14 +34,16 @@ const CenterDiv = styled.div`
  *  Methods
  */
 const checkFirstVisit = () => {
-  let cryptoDashData = localStorage.getItem('cryptoDash');
+  let cryptoDashData = JSON.parse(localStorage.getItem('cryptoDash'));
   if(!cryptoDashData){
     return {
       firstVisit: true,
       page: 'settings'
     }
   }
-  return {};
+  return {
+    favorites: cryptoDashData.favorites
+  };
 }
 
 /**
@@ -58,7 +60,29 @@ class App extends Component {
   componentDidMount = () => {
     // Fetch coins
     this.fetchCoins();
+    this.fetchPrices();
   }
+
+  fetchPrices = async () => {
+    let prices;
+    try {
+      prices = await this.prices();
+    } catch (e) {
+      console.error(e);
+    }
+    console.log(prices);
+    this.setState({prices});
+  };
+
+  prices = async () => {
+    let promises = [];
+    this.state.favorites.forEach(sym => {
+      promises.push(cc.priceFull(sym, 'USD'));
+    })
+    return Promise.all(promises);
+  }
+
+
 
   fetchCoins = async () => {
     let coinList = (await cc.coinList()).Data;
@@ -68,7 +92,9 @@ class App extends Component {
 
   // Display logic
   displayingDashboard = () => this.state.page === 'dashboard';
+  
   displayingSettings = () => this.state.page === 'settings';
+  
   firstVisitMessage = () => {
     if(this.state.firstVisit){
       return <div>Welcome to CryptoDash. Select favorite coins to begin</div>
@@ -81,30 +107,14 @@ class App extends Component {
     localStorage.setItem('cryptoDash', JSON.stringify({favorites: this.state.favorites}));
   };
 
-
-  // Settings to display
-  settingsContent = () => {
-    return ( 
-    <div>
-      {this.firstVisitMessage()}
-      <div>
-        {CoinList.call(this, true)}  {/* Loading favorites */}
-        <CenterDiv>
-          <ConfirmButton onClick={this.confirmFavorites}>
-            Confirm Favorites
-          </ConfirmButton>
-        </CenterDiv>
-      
-        {Search.call(this)}          {/* Fuzzy search      */}
-        {CoinList.call(this)}        {/* Loading coinlist  */}      
-      </div>
-    </div>)
-  };
-
   // Loading Message
   loadingContent = () => {
     if(!this.state.coinList){
-      return <div>Loading Coins</div>
+      return <div>Loading Coins</div>;
+    }
+
+    if(!this.state.prices){
+      return <div>Loading Prices</div>;
     }
   }
 
@@ -158,6 +168,33 @@ class App extends Component {
     this.setState({filteredCoins});
   }, 500)// wrapped in debounce
 
+  // Settings to display
+  settingsContent = () => {
+    return ( 
+    <div>
+      {this.firstVisitMessage()}
+      <div>
+        {CoinList.call(this, true)}  {/* Loading favorites */}
+        <CenterDiv>
+          <ConfirmButton onClick={this.confirmFavorites}>
+            Confirm Favorites
+          </ConfirmButton>
+        </CenterDiv>
+      
+        {Search.call(this)}          {/* Fuzzy search      */}
+        {CoinList.call(this)}        {/* Loading coinlist  */}      
+      </div>
+    </div>)
+  };
+
+  dashboardContent = () => {
+    return (
+      <div>
+        Dashboard
+      </div>
+    )
+  }
+
   render() {
     return (
       <AppLayout>
@@ -167,6 +204,7 @@ class App extends Component {
       {this.loadingContent() || ( 
         <Content>
           {this.displayingSettings() && this.settingsContent()}
+          {this.displayingDashboard() && this.dashboardContent()}
         </Content>
       )}
       </AppLayout>
