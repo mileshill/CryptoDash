@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import AppBar from './AppBar';
 import CoinList from './CoinList';
 import Search from './Search';
+import Dashboard from './Dashboard';
 import { ConfirmButton } from './Button';
 import * as _ from 'lodash';
 import fuzzy from 'fuzzy';
@@ -70,7 +71,6 @@ class App extends Component {
     } catch (e) {
       console.error(e);
     }
-    console.log(prices);
     this.setState({prices});
   };
 
@@ -204,7 +204,7 @@ class App extends Component {
       {this.loadingContent() || ( 
         <Content>
           {this.displayingSettings() && this.settingsContent()}
-          {this.displayingDashboard() && this.dashboardContent()}
+          {this.displayingDashboard() && Dashboard.call(this)}
         </Content>
       )}
       </AppLayout>
