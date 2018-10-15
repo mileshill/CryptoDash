@@ -50,7 +50,7 @@ export default function(){
                 onClick: () => {
                     this.setState({currentFavorite: sym});
                     localStorage.setItem('cryptoDash', JSON.stringify({
-                        ...JSON.parse(localStorage.get('cryptoDash')),
+                        ...JSON.parse(localStorage.getItem('cryptoDash')),
                         currentFavorite: sym
                     }))
                 }
