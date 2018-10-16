@@ -3,6 +3,9 @@ import { CoinGrid, CoinTile, CoinHeaderGrid, CoinSymbol } from './CoinList';
 import { fontSizeBig, fontSize3, subtleBoxShadow, lightBlueBackground } from './Style';
 import styled, { css } from 'styled-components';
 
+import highchartsConfig from './HighChartsConfig';
+const ReactHighCharts = require('react-highcharts');
+
 const numberFormat = number => {
     return +(number + '').slice(0,7);
 }
@@ -93,7 +96,7 @@ export default function(){
 
         </PaddingBlue>
         <PaddingBlue>
-            Chart goes here
+            <ReactHighCharts config={highchartsConfig.call(this)} />
         </PaddingBlue>
     </ChartGrid>
     ]
