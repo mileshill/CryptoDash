@@ -70,6 +70,7 @@ class App extends Component {
   }
 
   fetchPrices = async () => {
+    if(this.state.firstVisit) return;
     let prices;
     try {
       prices = await this.prices();
@@ -88,14 +89,14 @@ class App extends Component {
   }
 
   fetchHistorical = async () => {
-    if(this.state.currentFavorite){
-      let results = await this.historical();
-      let historical = [{
-        name: this.state.currentFavorite,
-        data: results.map((ticker, idx) => [moment().subtract({days: TIME_UNITS - idx}).valueOf(), ticker.USD])
-      }]
-      this.setState({historical});
-    }
+    if(this.state.firstVisist) return;
+    let results = await this.historical();
+    let historical = [{
+      name: this.state.currentFavorite,
+      data: results.map((ticker, idx) => [moment().subtract({days: TIME_UNITS - idx}).valueOf(), ticker.USD])
+    }]
+    this.setState({historical});
+    
   }
 
   historical = () => {
@@ -147,7 +148,7 @@ class App extends Component {
       return <div>Loading Coins</div>;
     }
 
-    if(!this.state.prices){
+    if(!this.state.firstVisit && !this.state.prices){
       return <div>Loading Prices</div>;
     }
   }
