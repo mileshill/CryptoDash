@@ -64,6 +64,7 @@ class App extends Component {
     // Fetch coins
     this.fetchCoins();
     this.fetchPrices();
+    this.fetchHistorical();
   }
 
   fetchPrices = async () => {
@@ -84,7 +85,11 @@ class App extends Component {
     return Promise.all(promises);
   }
 
-
+  fetchHistorical = async () => {
+    if(this.state.currentFavorite){
+      console.log(`fetching historical for ${this.state.currentFavorite}`);
+    }
+  }
 
   fetchCoins = async () => {
     let coinList = (await cc.coinList()).Data;
