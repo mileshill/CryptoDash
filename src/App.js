@@ -91,7 +91,6 @@ class App extends Component {
 
   fetchHistorical = async () => {
     if(this.state.firstVisist) return;
-    let chartType = this.state.chartType;
     let results = await this.historical();
     let historical = [{
       name: this.state.currentFavorite,
@@ -102,7 +101,6 @@ class App extends Component {
   }
 
   historical = () => {
-    let chartType = this.state.chartType;
     let promises = [];
     for(let units = TIME_UNITS; units > 0; units--){
       promises.push(cc.priceHistorical(this.state.currentFavorite, ['USD'], moment().subtract({[this.state.timeInterval]: units}).toDate()));
