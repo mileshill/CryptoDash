@@ -4,7 +4,9 @@ import { fontSizeBig, fontSize3, subtleBoxShadow, lightBlueBackground } from './
 import styled, { css } from 'styled-components';
 
 import highchartsConfig from './HighChartsConfig';
+import highchartsTheme from './HighChartsTheme';
 const ReactHighCharts = require('react-highcharts');
+ReactHighCharts.Highcharts.setOptions(highchartsTheme());
 
 const numberFormat = number => {
     return +(number + '').slice(0,7);
