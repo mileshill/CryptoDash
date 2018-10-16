@@ -11,7 +11,11 @@ export default function () {
         subtitle: {
             text: ''
         },
-    
+        
+        xAxis: {
+            type: 'datetime'
+        },
+        
         yAxis: {
             title: {
                 text: 'Price'

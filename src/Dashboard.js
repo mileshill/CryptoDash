@@ -53,11 +53,12 @@ export default function(){
             let tileProps = {
                 currentFavorite: sym === this.state.currentFavorite,
                 onClick: () => {
-                    this.setState({currentFavorite: sym});
+                    this.setState({currentFavorite: sym, historical:null});
                     localStorage.setItem('cryptoDash', JSON.stringify({
                         ...JSON.parse(localStorage.getItem('cryptoDash')),
                         currentFavorite: sym
-                    }))
+                    }));
+                    this.fetchHistorical();
                 }
             };
             return idx < 5 ? (
@@ -98,7 +99,10 @@ export default function(){
 
         </PaddingBlue>
         <PaddingBlue>
-            <ReactHighCharts config={highchartsConfig.call(this)} />
+            {this.state.historical ?
+                <ReactHighCharts config={highchartsConfig.call(this)} /> : 
+                <div>`Loading historical data for ${this.state.currentFavorite}`</div>
+            }
         </PaddingBlue>
     </ChartGrid>
     ]

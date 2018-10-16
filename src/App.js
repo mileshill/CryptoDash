@@ -64,9 +64,9 @@ class App extends Component {
 
   componentDidMount = () => {
     // Fetch coins
+    this.fetchHistorical();
     this.fetchCoins();
     this.fetchPrices();
-    this.fetchHistorical();
   }
 
   fetchPrices = async () => {
@@ -88,22 +88,20 @@ class App extends Component {
   }
 
   fetchHistorical = async () => {
-    let favorite = this.state.currentFavorite;
-    if(favorite){
-      console.log(`fetching historical for ${favorite}`);
-      let results = await this.historical(favorite);
+    if(this.state.currentFavorite){
+      let results = await this.historical();
       let historical = [{
-        name: favorite,
+        name: this.state.currentFavorite,
         data: results.map((ticker, idx) => [moment().subtract({months: TIME_UNITS - idx}).valueOf(), ticker.USD])
       }]
       this.setState({historical});
     }
   }
 
-  historical = (sym) => {
+  historical = () => {
     let promises = [];
     for(let units = TIME_UNITS; units > 0; units--){
-      promises.push(cc.priceHistorical(sym, ['USD'], moment().subtract({months: units}).toDate()));
+      promises.push(cc.priceHistorical(this.state.currentFavorite, ['USD'], moment().subtract({months: units}).toDate()));
     }
     return Promise.all(promises);
   }
@@ -132,9 +130,11 @@ class App extends Component {
       firstVisit: false, 
       page: 'dashboard',
       prices: null,
-      currentFavorite
+      currentFavorite,
+      historical: null
     });
     this.fetchPrices();
+    this.fetchHistorical();
     localStorage.setItem('cryptoDash', JSON.stringify({
       favorites: this.state.favorites,
       currentFavorite
