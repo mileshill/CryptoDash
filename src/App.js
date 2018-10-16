@@ -8,6 +8,7 @@ import Dashboard from './Dashboard';
 import { ConfirmButton } from './Button';
 import * as _ from 'lodash';
 import fuzzy from 'fuzzy';
+import moment from 'moment';
 const cc = require('cryptocompare');
 
 
@@ -15,6 +16,7 @@ const cc = require('cryptocompare');
  *  Constant Parameters
  */
 const MAX_FAVORITES = 10;
+const TIME_UNITS = 10;
 
 /**
  *  Styled Components
@@ -86,9 +88,24 @@ class App extends Component {
   }
 
   fetchHistorical = async () => {
-    if(this.state.currentFavorite){
-      console.log(`fetching historical for ${this.state.currentFavorite}`);
+    let favorite = this.state.currentFavorite;
+    if(favorite){
+      console.log(`fetching historical for ${favorite}`);
+      let results = await this.historical(favorite);
+      let historical = [{
+        name: favorite,
+        data: results.map((ticker, idx) => [moment().subtract({months: TIME_UNITS - idx}).valueOf(), ticker.USD])
+      }]
+      this.setState({historical});
     }
+  }
+
+  historical = (sym) => {
+    let promises = [];
+    for(let units = TIME_UNITS; units > 0; units--){
+      promises.push(cc.priceHistorical(sym, ['USD'], moment().subtract({months: units}).toDate()));
+    }
+    return Promise.all(promises);
   }
 
   fetchCoins = async () => {
