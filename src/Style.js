@@ -19,3 +19,10 @@ export const fontSize2 = 'font-size: 1.0em;';
 export const fontSize3 = 'font-size: 0.75em;';
 
 export const textAlignCenter = 'text-align: center';
+
+const theme = 'dark';
+export const lightTheme = theme === 'light'; 
+if(lightTheme){
+	document.body.style.background = '#e1eaee';
+	document.body.style.color = '#061a44';
+}
