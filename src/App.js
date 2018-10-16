@@ -64,9 +64,9 @@ class App extends Component {
 
   componentDidMount = () => {
     // Fetch coins
-    this.fetchHistorical();
     this.fetchCoins();
     this.fetchPrices();
+    this.fetchHistorical();
   }
 
   fetchPrices = async () => {
@@ -92,7 +92,7 @@ class App extends Component {
       let results = await this.historical();
       let historical = [{
         name: this.state.currentFavorite,
-        data: results.map((ticker, idx) => [moment().subtract({months: TIME_UNITS - idx}).valueOf(), ticker.USD])
+        data: results.map((ticker, idx) => [moment().subtract({days: TIME_UNITS - idx}).valueOf(), ticker.USD])
       }]
       this.setState({historical});
     }
@@ -101,7 +101,7 @@ class App extends Component {
   historical = () => {
     let promises = [];
     for(let units = TIME_UNITS; units > 0; units--){
-      promises.push(cc.priceHistorical(this.state.currentFavorite, ['USD'], moment().subtract({months: units}).toDate()));
+      promises.push(cc.priceHistorical(this.state.currentFavorite, ['USD'], moment().subtract({days: units}).toDate()));
     }
     return Promise.all(promises);
   }

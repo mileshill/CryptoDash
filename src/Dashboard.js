@@ -53,12 +53,15 @@ export default function(){
             let tileProps = {
                 currentFavorite: sym === this.state.currentFavorite,
                 onClick: () => {
-                    this.setState({currentFavorite: sym, historical:null});
+                    this.setState(
+                        {currentFavorite: sym, historical:null},
+                        () => this.fetchHistorical()
+                    );
+                    
                     localStorage.setItem('cryptoDash', JSON.stringify({
                         ...JSON.parse(localStorage.getItem('cryptoDash')),
                         currentFavorite: sym
                     }));
-                    this.fetchHistorical();
                 }
             };
             return idx < 5 ? (
