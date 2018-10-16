@@ -1,6 +1,6 @@
 import React from 'react'
 import { CoinGrid, CoinTile, CoinHeaderGrid, CoinSymbol } from './CoinList';
-import { fontSizeBig, fontSize3, subtleBoxShadow, lightBlueBackground } from './Style';
+import { fontSizeBig, fontSize2, fontSize3, subtleBoxShadow, lightBlueBackground, backgroundColor2 } from './Style';
 import styled, { css } from 'styled-components';
 
 import highchartsConfig from './HighChartsConfig';
@@ -44,6 +44,17 @@ const ChartGrid = styled.div`
     margin-top: 15px;
 `;
 
+const ChartSelect = styled.select`
+    ${backgroundColor2}
+    color: white;
+    border: 1px solid;
+    ${fontSize2}
+    place-self: center left;
+    margin: 5px;
+    height: 25px;
+    float: right;
+`;
+
 export default function(){
     return [
     <CoinGrid>
@@ -57,7 +68,7 @@ export default function(){
                         {currentFavorite: sym, historical:null},
                         () => this.fetchHistorical()
                     );
-                    
+
                     localStorage.setItem('cryptoDash', JSON.stringify({
                         ...JSON.parse(localStorage.getItem('cryptoDash')),
                         currentFavorite: sym
@@ -102,6 +113,14 @@ export default function(){
 
         </PaddingBlue>
         <PaddingBlue>
+            <ChartSelect onChange={(event) => {
+                this.setState({timeInterval: event.target.value, historical: null});
+                this.fetchHistorical();
+            }}>
+                <option value="days">Days</option>
+                <option value="weeks">Weeks</option>
+                <option value="months">Months</option>
+            </ChartSelect>
             {this.state.historical ?
                 <ReactHighCharts config={highchartsConfig.call(this)} /> : 
                 <div>`Loading historical data for ${this.state.currentFavorite}`</div>
