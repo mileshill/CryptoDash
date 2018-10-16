@@ -114,8 +114,8 @@ export default function(){
         </PaddingBlue>
         <PaddingBlue>
             <ChartSelect onChange={(event) => {
-                this.setState({timeInterval: event.target.value, historical: null});
-                this.fetchHistorical();
+                this.setState({timeInterval: event.target.value, historical: null},
+                    this.fetchHistorical);
             }}>
                 <option value="days">Days</option>
                 <option value="weeks">Weeks</option>

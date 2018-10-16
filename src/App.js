@@ -16,7 +16,7 @@ const cc = require('cryptocompare');
  *  Constant Parameters
  */
 const MAX_FAVORITES = 10;
-const TIME_UNITS = 10;
+const TIME_UNITS = 15;
 
 /**
  *  Styled Components
